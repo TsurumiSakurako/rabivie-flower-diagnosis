@@ -33,3 +33,12 @@
  .brand{font-size:clamp(25px,7.3vw,34px);letter-spacing:.045em;}
  .brand:before,.brand:after{margin:0 7px;font-size:.42em;}
 }
+
+/* Ver.15: fixed three-part wordmark; no wrapping on start or result screens. */
+.brand::before,.brand::after{content:none!important;display:none!important}
+.brand{white-space:normal;text-align:center}
+.brand-line{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:clamp(7px,2vw,15px);white-space:nowrap}
+.brand-word{display:inline-block;flex:0 0 auto;line-height:1.2}
+.brand-flower{display:inline-block;flex:0 0 auto;font-size:.42em;line-height:1}
+.brand .brand-subtitle{display:block;font:600 10px system-ui,sans-serif;letter-spacing:.33em;color:#a58b69;margin-top:4px}
+@media(max-width:480px){.brand{font-size:clamp(26px,8vw,36px);letter-spacing:.045em}.brand-line{gap:8px}}
