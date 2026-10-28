@@ -24,6 +24,24 @@ null,
 ['もし今日、自分に小さなご褒美をあげるなら？',['自分に向けた小さな手紙','思い出を残せるもの','新しいことを始めるアイテム','ゆっくり癒される時間','ずっと欲しかったお気に入りのもの']]
 ]};
 let screen='start',step=0,mode='gift',answers=Array(10).fill(null),result=null;
+// Keep the completed diagnosis when the page is refreshed or reopened.
+const RESULT_STORAGE_KEY='rabivie-flower-result-v1';
+function saveResult(){
+ try{localStorage.setItem(RESULT_STORAGE_KEY,JSON.stringify({mode,answers}));}catch(e){}
+}
+function clearSavedResult(){
+ try{localStorage.removeItem(RESULT_STORAGE_KEY);}catch(e){}
+}
+function restoreResult(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(RESULT_STORAGE_KEY)||'null');
+  if(!saved || !['gift','self'].includes(saved.mode) || !Array.isArray(saved.answers) || saved.answers.length!==10) return;
+  const valid=saved.answers.every((value,i)=>Number.isInteger(value)&&value>=0&&value<(i===0?questionSets.gift[0]:questionSets[saved.mode][i])[1].length);
+  if(!valid) return;
+  mode=saved.mode;answers=saved.answers;result=rankFlowers(mode,answers);screen='result';
+ }catch(e){clearSavedResult();}
+}
+
 function qAt(i){return i===0?questionSets.gift[0]:questionSets[mode][i]}
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
 function flowerName(f){return f.color?`${f.color}の${f.name}`:f.name}
@@ -58,13 +76,14 @@ function render(){
     answers[step]=selected;render();
   });
   $('#back').onclick=()=>{if(step>0){step--;render()}};
-  $('#next').onclick=()=>{if(step===9){result=rankFlowers(mode,answers);screen='result';render()}else{step++;render()}};
+  $('#next').onclick=()=>{if(step===9){result=rankFlowers(mode,answers);screen='result';saveResult();render()}else{step++;render()}};
   return;
  }
  const f=result.main;
  const mainCopy=resultCopy(f,mode,answers,true);
  const otherCards=result.others.map((item,i)=>`<article class="recommend-card"><div class="recommend-label">${i+2}　OTHER FLOWER 0${i+1}</div><div class="mini-flower">${imageOrPlaceholder(flowerImage(item),"recommend-photo",`${flowerName(item)}の商品画像`)}</div><h3>${escapeHTML(flowerName(item))}</h3><p class="mini-meaning">花言葉「${escapeHTML(item.meaning)}」</p><p>${escapeHTML(resultCopy(item,mode,answers,false).body)}</p><a class="mini-link" href="${escapeHTML(productUrl(item))}" target="_blank" rel="noopener noreferrer">${productLinkText(item)}</a><small>${shopNote(item)}</small></article>`).join('');
  app.innerHTML=`<div class="results"><div class="result-heading"><div class="eyebrow">YOUR FLOWER LANGUAGE</div><h1>診断結果 ✿</h1><p>あなたの想いにぴったりの一輪が見つかりました ♡</p></div><section class="panel result"><div class="eyebrow">♡ あなたにぴったりの一輪 ♡</div><div class="result-flower-art">${imageOrPlaceholder(flowerImage(f),"result-photo",`${flowerName(f)}の商品画像`)}</div><p class="type-caption">YOUR FLOWER TYPE</p><p class="type-name">${escapeHTML(mainCopy.title)}</p><h2 class="name">${escapeHTML(flowerName(f))}</h2><div class="meaning">花言葉<br><strong>「${escapeHTML(f.meaning)}」</strong></div><div class="result-text"><h3>♡ このお花が選ばれた理由</h3><p class="reason">${escapeHTML(mainCopy.body)}</p></div><div class="message"><strong>✉ このお花に込めたいメッセージ</strong><p>「${escapeHTML(mainCopy.message)}」</p></div></section><section class="panel purchase"><div class="eyebrow">MAKE YOUR FLOWER A GIFT</div><h2>この想いを、お花に込めて ♡</h2><p class="meta">診断されたお花を、お好きな形で楽しめます。</p><div class="purchase-choice"><h3>✿ 一輪のお花として楽しむ</h3><p>花言葉をそのまま贈りたい方に。診断されたカラーを商品ページで選んでください。</p><a class="button" href="${escapeHTML(productUrl(f))}" target="_blank" rel="noopener noreferrer">${productLinkText(f)}</a><small>${shopNote(f)}</small></div><div class="purchase-choice"><h3>♡ ブーケやアレンジにする</h3><p>このお花を取り入れたブーケやアレンジを、フルオーダーでご相談いただけます。</p><a class="button secondary outline" href="${orderUrl}" target="_blank" rel="noopener noreferrer">フルオーダーについて詳しく見る　›</a></div></section><section class="recommend"><h2>こちらの花言葉もおすすめ ♡</h2><p class="meta">あなたの想いに近い、もう2つのお花</p><div class="recommend-grid">${otherCards}</div></section><div class="bottom-actions"><button class="button secondary" id="again">↶ もう一度診断する</button></div><p class="meta result-note">※画像・商品URLは設定状況に応じて表示されます。個別商品ページが未登録のお花は一覧へ移動します。季節のお花は販売確認まで診断対象外です。</p></div>`;
- $('#again').onclick=()=>{screen='start';step=0;mode='gift';answers=Array(10).fill(null);render()};
+ $('#again').onclick=()=>{clearSavedResult();screen='start';step=0;mode='gift';answers=Array(10).fill(null);result=null;render()};
 }
+restoreResult();
 render();
