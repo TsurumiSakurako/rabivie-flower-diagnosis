@@ -18,3 +18,11 @@
 .hero-illustration{background:#f8f2e9;min-height:0;}
 .hero-photo{width:100%;height:auto;max-height:none;aspect-ratio:auto;object-fit:contain;display:block;}
 @media(max-width:480px){.hero-logo{width:min(170px,55%)}.hero-illustration{min-height:0}}
+
+/* Ver.12: Show the entire flower photograph in square result frames. */
+.result-flower-art{width:100%;aspect-ratio:1/1;height:auto;min-height:0;margin:22px 0;overflow:hidden;border-radius:19px;background:#fbf5ed}
+.result-photo{display:block;width:100%;height:100%;aspect-ratio:1/1;max-height:none;object-fit:contain;object-position:center;border-radius:19px}
+.result-photo-fallback{width:100%;height:100%;aspect-ratio:1/1;min-height:0}
+.mini-flower{width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:14px;background:#fbf5ed}
+.recommend-photo{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:contain;object-position:center;border-radius:14px}
+@media(max-width:480px){.result-flower-art{height:auto;min-height:0}.result-photo-fallback{height:100%}}
