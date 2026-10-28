@@ -42,11 +42,11 @@ function imageOrPlaceholder(src,cls,alt,placeholder='✿'){
 }
 function productLinkText(f){return hasDirectProduct(f)?'シングルフラワーを見る　›':'シングルフラワー一覧を見る　›'}
 function shopNote(f){return f.color?`商品ページで「${escapeHTML(f.color)}」を選択してください。`:''}
-const optionIcons=['♡','✿','✧','❀','☘','☼'];
+const optionIcons=['♡','✿','✧','❀','<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 15C7 4 2 13 11 17C2 19 10 28 16 19C22 28 30 19 21 17C30 13 25 4 16 15Z"/><path d="M16 19c1 4 4 7 8 9"/></svg>','☼'];
 function render(){
  const app=$('#app');
  if(screen==='start'){
-  app.innerHTML=`<div class="panel hero">${config.logo?`<img class="hero-logo" src="${escapeHTML(config.logo)}" alt="RabiVie ロゴ">`: '<div class="hero-ornament">✿ — ♡ — ✿</div>'}<div class="eyebrow">A FLOWER FOR YOUR FEELINGS</div><h1>言葉にできない想いを、<br><em>花言葉に。</em></h1><div class="hero-illustration">${imageOrPlaceholder(config.heroImage,"hero-photo","RabiVie 花言葉診断のメイン画像","❀ ✿ ❁")}</div><p>大切な人にも、自分自身にも。<br>10の質問を通して、あなたの想いに<br>ぴったりの一輪を見つけましょう。</p><div class="hero-tags"><span>♡ 想いを込めて</span><span>✿ あなただけの花言葉</span><span>約3〜5分</span></div><button class="button" id="start">花言葉診断をはじめる　›</button><p class="meta">自分へのご褒美や、大切な人への贈り物にも ♡</p></div>`;
+  app.innerHTML=`<div class="panel hero">${config.logo?`<img class="hero-logo" src="${escapeHTML(config.logo)}" alt="RabiVie ロゴ">`: '<div class="hero-ornament">✿ — ♡ — ✿</div>'}<div class="eyebrow">A FLOWER FOR YOUR FEELINGS</div><h1>言葉にできない想いを、<br><em>花言葉にのせて贈る。</em></h1><div class="hero-illustration">${imageOrPlaceholder(config.heroImage,"hero-photo","RabiVie 花言葉診断のメイン画像","❀ ✿ ❁")}</div><p>大切な人にも、自分自身にも。<br>10の質問を通して、あなたの想いに<br>ぴったりの一輪を見つけましょう。</p><div class="hero-tags"><span>♡ 想いを込めて</span><span>✿ あなただけの花言葉</span><span>約3〜5分</span></div><button class="button" id="start">花言葉診断をはじめる　›</button><p class="meta">自分へのご褒美や、大切な人への贈り物にも ♡</p></div>`;
   $('#start').onclick=()=>{screen='quiz';render()};return;
  }
  if(screen==='quiz'){
